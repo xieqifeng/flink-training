@@ -74,9 +74,12 @@ public class TaxiRideGenerator implements SourceFunction<TaxiRide> {
 			java.util.Collections.shuffle(startEvents, new Random(id));
 			startEvents.iterator().forEachRemaining(r -> ctx.collectWithTimestamp(r, r.getEventTime()));
 
+			System.out.println(maxStartTime);
 			// produce a Watermark
 			ctx.emitWatermark(new Watermark(maxStartTime));
-
+			TaxiRide r = new TaxiRide(id * 2, true);
+			System.out.println(r.getEventTime());
+			ctx.collectWithTimestamp(r, r.getEventTime());
 			// prepare for the next batch
 			id += BATCH_SIZE;
 

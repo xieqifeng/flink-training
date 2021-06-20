@@ -18,13 +18,25 @@
 
 package org.apache.flink.training.examples.ridecount;
 
+import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
+import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.WindowAssigner;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.api.windowing.triggers.Trigger;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.apache.flink.streaming.api.windowing.windows.Window;
 import org.apache.flink.training.exercises.common.datatypes.TaxiRide;
 import org.apache.flink.training.exercises.common.sources.TaxiRideGenerator;
+
+import java.util.Collection;
 
 /**
  * Example that counts the rides for each driver.
@@ -59,9 +71,11 @@ public class RideCountExample {
 
 		// partition the stream by the driverId
 		KeyedStream<Tuple2<Long, Long>, Long> keyedByDriverId = tuples.keyBy(t -> t.f0);
+		WindowedStream<Tuple2<Long, Long>, Long, TimeWindow> window = keyedByDriverId.window(TumblingEventTimeWindows.of(Time.seconds(100)));
+//		Time.seconds(100)
 
 		// count the rides for each driver
-		DataStream<Tuple2<Long, Long>> rideCounts = keyedByDriverId.sum(1);
+		DataStream<Tuple2<Long, Long>> rideCounts = window.sum(1);
 
 		// we could, in fact, print out any or all of these streams
 		rideCounts.print();
