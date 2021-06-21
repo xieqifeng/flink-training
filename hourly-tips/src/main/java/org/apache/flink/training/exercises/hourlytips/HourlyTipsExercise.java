@@ -18,8 +18,11 @@
 
 package org.apache.flink.training.exercises.hourlytips;
 
+import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.training.exercises.common.datatypes.TaxiFare;
 import org.apache.flink.training.exercises.common.sources.TaxiFareGenerator;
 import org.apache.flink.training.exercises.common.utils.ExerciseBase;
@@ -28,8 +31,10 @@ import org.apache.flink.training.exercises.common.utils.MissingSolutionException
 /**
  * The "Hourly Tips" exercise of the Flink training in the docs.
  *
- * <p>The task of the exercise is to first calculate the total tips collected by each driver, hour by hour, and
- * then from that stream, find the highest tip total in each hour.
+ * <p>
+ * The task of the exercise is to first calculate the total tips collected by
+ * each driver, hour by hour, and then from that stream, find the highest tip
+ * total in each hour.
  *
  */
 public class HourlyTipsExercise extends ExerciseBase {
@@ -47,13 +52,23 @@ public class HourlyTipsExercise extends ExerciseBase {
 
 		// start the data generator
 		DataStream<TaxiFare> fares = env.addSource(fareSourceOrTest(new TaxiFareGenerator()));
+		fares.keyBy(t -> t.driverId).window(TumblingEventTimeWindows.of(Time.hours(1))).sum(t -> t.tip);
+		// throw new MissingSolutionException();
 
-		throw new MissingSolutionException();
-
-//		printOrTest(hourlyMax);
+		// printOrTest(hourlyMax);
 
 		// execute the transformation pipeline
-//		env.execute("Hourly Tips (java)");
+		env.execute("Hourly Tips (java)");
 	}
+
+	// private static class MyReducingSum implements ReduceFunction<TaxiFare> {
+
+	// @Override
+	// public TaxiFare reduce(TaxiFare value1, TaxiFare value2) throws Exception {
+	// // TODO Auto-generated method stub
+	// return ;
+	// }
+
+	// }
 
 }

@@ -1,0 +1,71 @@
+--name:test
+--author:xqf
+--create time:2021-06-21 17:57
+
+drop table ods_tr_task_device_image_log_di_1d;
+create table ods_tr_task_device_image_log_di_1d
+(
+	costCenterCode      string,
+	fee                 int,
+	isReport            string,
+	userPhone           string,
+	type                string,
+	createdAt           date,
+	complaintState      int,
+	inWhite             int,
+	PeriodDate          string,
+	updatedAt           date,
+	companyCode         string,
+	EntryPeriod         string,
+	Period              string,
+	P0004               int,
+	P0001               int,
+	userMasterId        int,
+	P0003               int,
+	P0002               int,
+	hasCompetitor       int,
+	costCenterName      string,
+	salesman            string,
+	_id                 string,
+	bindingClientName   string,
+	status              string,
+	applyClientProvince string,
+	code                string,
+	dayCount            int,
+	UpdatePeriod        string,
+	imgId               string,
+	lastTourId          String,
+	ShippedPeriod       string,
+	districts           string,
+	shopName            string,
+	resultAt            date,
+	vacancyRate         double,
+	uniqCode            string,
+	formattedAddress    string,
+	ResultPeriod        string,
+	situation           string,
+	purityRate          double,
+	shopCode            string,
+	bindingClientCode   string,
+	takeAt              date,
+	canPut              string,
+	entryAt             date,
+	lastTourAt          date,
+	userName            string,
+	applyClientCode     string,
+	totalSku            int,
+	isPunish            int,
+	isStandard          int,
+	whiteReason         string,
+	totalNum            int,
+	applyNo             string,
+	netImgUrl           string,
+	category            string,
+	plumpnessRate       double,
+	jdyId               string
+)
+comment '巡店任务系统-设备最大排面的达标记录表'
+partitioned by
+(
+	pt String
+);
